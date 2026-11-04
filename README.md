@@ -24,20 +24,28 @@ Testes: `.\mvnw test` — Build: `.\mvnw package`
 
 ```
 src/main/java/com/agendapro/
-  AgendaProApplication.java      ponto de entrada
-  Appointment.java               entidade (campos + validações)
-  AppointmentRepository.java     acesso ao banco
-  CalendarController.java        rotas: calendário e CRUD de agendamentos
+  AgendaProApplication.java          ponto de entrada
+  appointment/                       funcionalidade: agendamentos
+    Appointment.java                   entidade (campos + validações)
+    AppointmentRepository.java         acesso ao banco
+    AppointmentController.java         rotas: criar, editar, excluir
+  calendar/                          funcionalidade: calendário
+    CalendarController.java            rota da tela principal
+    CalendarService.java               monta a grade de mês/semana
+    CalendarDay.java, CalendarPage.java  dados enviados à página
 src/main/resources/
-  templates/calendar.html        páginas Thymeleaf (visões mês/semana)
-  templates/form.html            formulário de criar/editar
-  static/style.css               todo o CSS
-  application.properties         configuração (banco etc.)
+  templates/calendar/calendar.html   visões mês/semana
+  templates/appointment/form.html    formulário de criar/editar
+  templates/fragments/head.html      <head> compartilhado
+  static/css/style.css               todo o CSS
+  application.properties             configuração (banco etc.)
 ```
 
 ## Como adicionar funcionalidades
 
-- **Novo campo** (ex.: local, cor): adicione em `Appointment.java` e no `form.html`; o banco é atualizado automaticamente (`ddl-auto=update`).
-- **Nova página/rota**: método novo em `CalendarController.java` + um `.html` em `templates/`.
+Cada funcionalidade nova ganha seu pacote em `com/agendapro/` e sua pasta em `templates/` (ex.: `client/`, `service/`).
+
+- **Novo campo** (ex.: local, cor): adicione em `Appointment.java` e no `appointment/form.html`; o banco é atualizado automaticamente (`ddl-auto=update`).
+- **Nova página/rota**: método novo no controller da funcionalidade + um `.html` na pasta dela em `templates/`.
 - **Nova consulta** (ex.: busca por título): método novo em `AppointmentRepository.java`.
 - **Outro banco** (Postgres/MySQL): troque o driver no `pom.xml` e as linhas `spring.datasource.*` em `application.properties`.
