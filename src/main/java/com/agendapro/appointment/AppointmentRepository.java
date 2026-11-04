@@ -1,4 +1,4 @@
-package com.agendapro;
+package com.agendapro.appointment;
 
 import java.time.LocalDateTime;
 import java.util.List;
