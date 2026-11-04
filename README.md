@@ -1,41 +1,43 @@
 # AgendaPro
 
-MVP de um sistema de agendas (SaaS): calendário com visões **mês** e **semana** para criar, visualizar, editar e excluir agendamentos (título, início, fim e descrição).
+Sistema de agendas: calendário **mês** e **semana** para criar, editar e excluir agendamentos (título, início, fim e descrição).
 
 ## Stack
 
-- Next.js (App Router) + React + TypeScript
-- Persistência local via `localStorage` (navegador)
+- Java 25 + Spring Boot (Spring MVC, Spring Data JPA)
+- Thymeleaf (páginas HTML renderizadas no servidor) + CSS puro
+- Banco H2 em arquivo (`./data`), sem instalação extra
 
 ## Como executar
 
-Requer Node.js 18.18+.
+Requer **JDK 25 ou superior**. O Maven já vem embutido (`mvnw`).
 
-```bash
-npm install
-npm run dev      # http://localhost:3000
+```powershell
+.\mvnw spring-boot:run
 ```
 
-Build de produção:
+Acesse http://localhost:8080. Para parar, `Ctrl+C`.
 
-```bash
-npm run build
-npm start
-```
-
-## Uso
-
-- Clique em um dia (mês) ou em um horário (semana) para criar um agendamento; ou use **+ Novo**.
-- Clique em um agendamento para editar ou excluir.
-- Use ‹ / › / **Hoje** para navegar e **Mês / Semana** para alternar a visão.
+Testes: `.\mvnw test` — Build: `.\mvnw package`
 
 ## Estrutura
 
-- `src/components/Calendar.tsx` – calendário e visões
-- `src/components/AppointmentModal.tsx` – formulário de agendamento
-- `src/lib/storage.ts` – interface `AppointmentRepository` (hoje `localStorage`)
-- `src/lib/dates.ts` – utilitários de data
+```
+src/main/java/com/agendapro/
+  AgendaProApplication.java      ponto de entrada
+  Appointment.java               entidade (campos + validações)
+  AppointmentRepository.java     acesso ao banco
+  CalendarController.java        rotas: calendário e CRUD de agendamentos
+src/main/resources/
+  templates/calendar.html        páginas Thymeleaf (visões mês/semana)
+  templates/form.html            formulário de criar/editar
+  static/style.css               todo o CSS
+  application.properties         configuração (banco etc.)
+```
 
-## Próximos passos
+## Como adicionar funcionalidades
 
-Para evoluir para banco/multi-tenant, implemente `AppointmentRepository` sobre uma API/banco (ex.: Postgres + Prisma) e adicione autenticação e `tenantId` ao modelo `Appointment`.
+- **Novo campo** (ex.: local, cor): adicione em `Appointment.java` e no `form.html`; o banco é atualizado automaticamente (`ddl-auto=update`).
+- **Nova página/rota**: método novo em `CalendarController.java` + um `.html` em `templates/`.
+- **Nova consulta** (ex.: busca por título): método novo em `AppointmentRepository.java`.
+- **Outro banco** (Postgres/MySQL): troque o driver no `pom.xml` e as linhas `spring.datasource.*` em `application.properties`.

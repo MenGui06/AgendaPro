@@ -1,0 +1,20 @@
+﻿{
+  "tasks": [
+    {
+      "id": "001-upgrade-java-version",
+      "type": "upgrade",
+      "description": "Upgrade Java Version from 17 to 25 LTS. Addresses issues: Java Version is not the latest LTS",
+      "requirements": "Upgrade the configured Java version from 17 to Java 25 LTS only. Inspect and update all relevant Maven and runtime configuration (java.version in pom.xml, compiler/release settings, Maven wrapper/toolchain/CI or runtime files referencing the Java version). Correct applicable Java-version documentation (README.md mentions Java 17 and 'JDK 17 ou superior'). Do not upgrade Spring Boot, Spring Framework or Jakarta EE, and do not address cloud-readiness or Dockerfile findings. Build and run tests using JDK 25.",
+      "environmentConfiguration": null,
+      "skills": [{ "name": "java-version-upgrade", "location": "builtin" }],
+      "successCriteria": { "passBuild": "true", "passUnitTests": "true" }
+    }
+  ],
+  "metadata": {
+    "language": "java",
+    "planName": "java-25-upgrade",
+    "projectName": "AgendaPro",
+    "createdAt": "2026-11-04T15:13:41-03:00",
+    "version": "1.0"
+  }
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AgendaPro</title>
+  <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+<main class="app">
+  <header class="toolbar">
+    <h1>AgendaPro</h1>
+    <div class="nav">
+      <a class="btn" th:href="@{/(view=${view},date=${prev})}" aria-label="Anterior">‹</a>
+      <a class="btn" th:href="@{/(view=${view})}">Hoje</a>
+      <a class="btn" th:href="@{/(view=${view},date=${next})}" aria-label="Próximo">›</a>
+    </div>
+    <h2 class="period" th:text="${title}">Período</h2>
+    <div class="views">
+      <a class="btn" th:classappend="${view == 'month'} ? 'active'" th:href="@{/(view='month',date=${ref})}">Mês</a>
+      <a class="btn" th:classappend="${view == 'week'} ? 'active'" th:href="@{/(view='week',date=${ref})}">Semana</a>
+    </div>
+    <a class="btn primary" th:href="@{/appointments/new(view=${view},date=${today})}">+ Novo</a>
+  </header>
+
+  <section class="month" th:if="${view == 'month'}">
+    <div class="dow" th:each="w : ${weekdays}" th:text="${w}"></div>
+    <div class="cell" th:each="day : ${days}"
+         th:classappend="${day.outsideMonth() ? 'muted ' : ''} + ${day.today() ? 'today' : ''}">
+      <a class="num" th:href="@{/appointments/new(view=${view},date=${day.date()})}"
+         th:text="${day.date().dayOfMonth}">1</a>
+      <th:block th:each="a, st : ${day.items()}" th:if="${st.index < 3}">
+        <a class="chip" th:href="@{/appointments/{id}/edit(id=${a.id},view=${view})}"
+           th:title="${a.description != null and !a.description.isEmpty() ? a.description : a.title}"
+           th:text="|${#temporals.format(a.startTime, 'HH:mm')} ${a.title}|">09:00 Título</a>
+      </th:block>
+      <span class="more" th:if="${day.items().size() > 3}" th:text="|+${day.items().size() - 3} mais|"></span>
+    </div>
+  </section>
+
+  <section class="week" th:unless="${view == 'month'}">
+    <div class="day" th:each="day : ${days}">
+      <div class="dow" th:classappend="${day.today()} ? 'today'" th:text="${day.label()}">Dom 1</div>
+      <a class="event" th:each="a : ${day.items()}"
+         th:href="@{/appointments/{id}/edit(id=${a.id},view=${view})}"
+         th:title="${a.description != null and !a.description.isEmpty() ? a.description : a.title}">
+        <strong th:text="${a.title}">Título</strong><br>
+        <span th:text="|${#temporals.format(a.startTime, 'HH:mm')}–${#temporals.format(a.endTime, 'HH:mm')}|">09:00–10:00</span>
+      </a>
+      <a class="add" th:href="@{/appointments/new(view=${view},date=${day.date()})}">+ adicionar</a>
+    </div>
+  </section>
+</main>
+</body>
+</html>
